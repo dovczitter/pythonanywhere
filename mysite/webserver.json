@@ -1,0 +1,6 @@
+{
+    "//hostName":"localhost",
+    "//serverPort":8081,
+    "hostName":"127.0.0.1",
+    "serverPort":5000
+}
