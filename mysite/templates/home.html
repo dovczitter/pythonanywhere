@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MostActiveStocks - HOME</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+
+<body>
+  
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="container">
+
+        <div class="columns">
+          <div class="column">
+            <p class="is-size-2">Python demo project : <b>Most Active Stocks</b></p>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="control">
+              <label class="text is-size-2 pr-6">See me on :</label>
+              <button class="button is-large is-outlined is-link is-size-3" onclick="requestLinkedIn()">LinkedIn</button>
+              <button class="button is-large is-outlined is-link is-size-3" onclick="requestResume()">Resume</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="is-size-2">[{{info.dtNY}}] [Version: {{MostActiveStocks.version}}]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   
+  <section class="section">
+    <div class="container">
+ 
+      <!-- Yahoo Finance symbol request -->
+      <div class="columns">
+        <div class="column">
+          <div class="control">
+            <label class="text has-text-left is-size-2">Query 'Yahoo Finance' for stock info </label>
+            <input class="input is-medium is-dark is-size-4" value="SYMBOL" onfocus="if(this.value==this.defaultValue)this.value='';" type="text" id="symbol" style="width: 140px; height: 50px;" autocomplete="off" maxlength="10">
+            <button class="button is-large is-outlined is-link is-size-3" style="width: 140px; height: 50px;" onclick="requestYahoo()">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MostActiveStocks dropdown -->
+      <div class="columns">
+        <div class="column">
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button class="button has-text-centered is-outlined is-info is-size-2" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>MostActiveStocks</span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content is-size-2">
+                <a href="{{info.YahooHref}}">{{MostActiveStocks.YahooMostActivesName}}</a>
+                <a href="{{info.InvestingHref}}">{{MostActiveStocks.InvestingMostActivesName}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+
+<script type="text/javascript">
+  function requestYahoo() {
+    var sym= document.getElementById("symbol").value;
+    url = "https://finance.yahoo.com/quote/" + sym + "?p=" + sym;
+    window.location.href = url;
+  }
+  function requestLinkedIn() {
+    window.location.href = "https://www.linkedin.com/in/dov-czitter-0b51233/";
+  }
+  function requestResume() {
+    window.location.href = "{{ url_for('download', filename='DovCzitterResume.doc') }}";
+  }
+
+  var dropdown = document.querySelector('.dropdown');
+  dropdown.addEventListener('click', function(event) {
+    event.stopPropagation();
+    dropdown.classList.toggle('is-active');
+  });
+
+</script>
+
+</html>

@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="5" />
+  <title>MostActiveStocks DATA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
 
+<style type="text/css">
+  a:hover { font-weight: bold; }
+  tr:hover { background-color:#abdbe3; }
+  table { 
+      border-spacing: 10px;   /* cell spacing */
+      border-collapse: separate;
+  }
+</style>
+
+<body>
+
+  <div class="container">
+    <div class="box has-text-centered is-size-2">
+      <a href="/">{{market}} [{{dtNY}}]</a>
+    </div>
+  </div>
+  <div>
+    <table class="mx-auto is-bordered is-size-3">
+      <thead>
+        <tr>
+          {% for header in headings %}
+            {% if market == 'YahooMostActives' %}
+              {% if loop.index > 2 %}
+                <th td class="has-text-right">{{ header }}</th>
+              {% else %}
+                <th>{{ header }}</th>
+              {% endif %}
+            {% else %}
+              {% if loop.index > 1 %}
+                <th td class="has-text-right">{{ header }}</th>
+              {% else %}
+                <th>{{ header }}</th>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          {% for header in headings %}
+            {% if market == 'YahooMostActives' %}
+              {% if loop.index > 2 %}
+                <th td class="has-text-right">{{ header }}</th>
+              {% else %}
+                <th>{{ header }}</th>
+              {% endif %}
+            {% else %}
+              {% if loop.index > 1 %}
+                <th td class="has-text-right">{{ header }}</th>
+              {% else %}
+                <th>{{ header }}</th>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </tfoot>
+      <tbody>
+      {% for row in data %}
+        <tr>
+          {% for cell in row %}
+              {% if loop.index < loop.length %}
+
+                {% if market == 'YahooMostActives' %}
+                  {% if loop.index == 1 %}
+                    {% set symbol = cell %}
+                    <td><a href={{ MostActiveStocks.getYahooHref(symbol, htmlSrc) }}>{{symbol}}</a></td> 
+                  {% elif loop.index == 2 %}
+                    <td>{{ cell }}</td>
+                  {% else %}
+                    <td class="has-text-right">{{ cell }}</td>
+                  {% endif %}
+
+                {% else %}
+                  {% if loop.index > 1 %}
+                    {% if loop.index == 2 %}
+                      {% set symbol = cell %}
+                      <td><a href={{ MostActiveStocks.getInvestingHref(symbol, htmlSrc) }}>{{symbol}}</a></td> 
+                    {% else %}
+                      <td class="has-text-right">{{ cell }}</td>
+                    {% endif %}
+                  {% endif %}
+
+                {% endif %}
+              {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+  <script>
+    $('.table').DataTable({
+      paging: false,
+      "language": {
+            "decimal": ",",
+            "thousands": "."
+        },
+    })
+  </script>
+
+</body>
+</html>
