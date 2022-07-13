@@ -3,3 +3,5 @@ bs4
 html5lib
 requests
 cloudscraper
+lxml
+flask
