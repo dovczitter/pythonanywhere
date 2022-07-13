@@ -1,0 +1,3 @@
+Name,Url,field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11
+YahooMostActives,https://finance.yahoo.com/most-active,Symbol,Name,Price,Change,%Change,Volume,3MonthAvgVol,MonthlyCap,PE-Ratio(TTM)
+InvestingMostActives,https://www.investing.com/equities/most-active-stocks,Name,Last,High,Low,Chg,Chg %,Vol,Time

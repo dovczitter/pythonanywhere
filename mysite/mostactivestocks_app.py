@@ -3,6 +3,7 @@ import pytz, time
 from datetime import datetime
 from mostactivestocks import MostActiveStocks
 import os
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -25,6 +26,7 @@ def get_files(target):
                 datetime.utcfromtimestamp(os.path.getmtime(path)),
                 os.path.getsize(path)
             )
+            
 @app.route('/download/<path:filename>')
 def download(filename):
     return send_from_directory(
@@ -42,36 +44,47 @@ def handle_home():
     market = args[1] if len(args) > 1 else ''
     htmlSrc = ''
     info = {}
-    dtLocal = datetime.now().strftime("%d%b%Y:%H:%M:%S") + ' ' +  time.localtime().tm_zone
     tzNY = pytz.timezone('America/New_York')
     dtNY = datetime.now(tzNY).strftime("%d%b%Y:%H:%M:%S %Z")
-    yhaooHref = ''
-    investingHref = ''
+    dtLocal = datetime.now().strftime("%d%b%Y:%H:%M:%S") + ' ' +  time.localtime().tm_zone
 
-    if market == MostActiveStocks.YahooMostActivesName:
-        # --- Yahoo page ---
-        htmlSrc, data = MostActiveStocks.getData(MostActiveStocks.YahooMostActivesUrl)
-        headings = ( 'Symbol', 'Name', 'Price', 'Change', '%-Change', 'Volume', '3-Month-AvgVol', 'Monthly-Cap', 'PE-Ratio(TTM)' )
-        return render_template('data.html', market=market, headings=headings, data=data, htmlSrc=htmlSrc, dtNY=dtNY, MostActiveStocks=MostActiveStocks())
+    MostActiveStocksHrefs, CurrencyHrefs = MostActiveStocks.getHrefs(url)
 
-    elif market == MostActiveStocks.InvestingMostActivesName:
-        # --- Investing page ---
-        htmlSrc, data = MostActiveStocks.getData(MostActiveStocks.InvestingMostActivesUrl)
-        headings = ( 'Name', 'Last', 'High', 'Low', 'Chg', 'Chg %', 'Vol', 'Time' )
-        return render_template('data.html', market=market, headings=headings, data=data, htmlSrc=htmlSrc,  dtNY=dtNY, MostActiveStocks=MostActiveStocks())
-
-    else:
-        # --- HOME page ---
-        yhaooHref = f'{request.url}/mostactivestocks?market={MostActiveStocks.YahooMostActivesName}'
-        investingHref = f'{request.url}/mostactivestocks?market={MostActiveStocks.InvestingMostActivesName}'
+    if (market == ''):                  # --- HOME page ---
         if 'pythonanywhere' in url:
-            yhaooHref = f'{request.url}?market={MostActiveStocks.YahooMostActivesName}'
-            investingHref = f'{request.url}?market={MostActiveStocks.InvestingMostActivesName}'
+            for k,v in MostActiveStocksHrefs.items():
+                tmp = v
+                MostActiveStocksHrefs[k] = tmp.replace("/mostactivestocks","",1)
+            for k,v in CurrencyHrefs.items():
+                tmp = v
+                CurrencyHrefs[k] = tmp.replace("/mostactivestocks","",1)
+
         info = {
             'homePath' : url,
-            'YahooHref' : yhaooHref,
-            'InvestingHref' : investingHref,
+            'MostActiveStocksHrefs' : MostActiveStocksHrefs,
+            'CurrencyHrefs' : CurrencyHrefs,
             'dtLocal' : dtLocal,
             'dtNY' : dtNY,
         }
         return render_template('home.html', info=info, MostActiveStocks=MostActiveStocks())
+    else:
+        if market == 'BankOfChina':
+            htmlSrc, data = MostActiveStocks.parseUrl(market,'Currency Name')
+        else:
+            htmlSrc, data = MostActiveStocks.getData(market)
+        return render_template('data.html', market=market,data=data, htmlSrc=htmlSrc,  dtNY=dtNY, MostActiveStocks=MostActiveStocks())
+
+@app.route('/test')
+def handle_test():
+    url = request.url
+    info = {}
+    tzNY = pytz.timezone('America/New_York')
+    dtNY = datetime.now(tzNY).strftime("%d%b%Y:%H:%M:%S %Z")
+    dtLocal = datetime.now().strftime("%d%b%Y:%H:%M:%S") + ' ' +  time.localtime().tm_zone
+ 
+    info = {
+            'homePath' : url,
+            'dtLocal' : dtLocal,
+            'dtNY' : dtNY,
+        }
+    return render_template('test.html', info=info, MostActiveStocks=MostActiveStocks())

@@ -1,0 +1,10 @@
+Name,Url,field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11
+#BankOfEngland,https://www.bankofengland.co.uk/boeapps/database/Rates.asp?into=GBP&rateview=A,field1,field2,field3,field4,field5,field6,field7,field8
+#NewYorkFedRate,https://www.newyorkfed.org/markets/reference-rates/effr,DATE,RATE,1ST-PERCENTILE,25TH-PERCENTILE,75TH-PERCENTILE,99TH-PERCENTILE,VOLUME($Billions),TARGET RATE/RANGE
+#WallStreetJournal,https://www.wsj.com/market-data/currencies/exchangerates,field1,field2,field3,field4,field5,field6,field7
+#
+BankOfChina,https://www.bankofchina.com/sourcedb/whpj/enindex_1619.html,Currency,BuyRate,CashBuyRate,SellRate,CashSellRate,MidRate,PubTime
+BankOfEngland,https://www.bankofengland.co.uk/boeapps/database/Rates.asp?Travel=NIxAZx&into=USD,Currency,Current,52 wk-high,52 wk-low
+BankOfRussia,https://www.cbr.ru/eng/currency_base/daily/,NumCode,CurCode,Unit,Currency,Rate
+FederalReserve,https://www.federalreserve.gov/releases/h10/current/,Country,Currency,Latest
+#NewYorkFed,https://markets.newyorkfed.org/read?productCode=50&eventCodes=500&limit=25&startPosition=0&sort=postDt:-1&format=xml,Date,Rate,1ST-Percentile,25TH-Percentile,75TH-Percentile,99TH-Percentile,Volume($B),TARGET RATE/RANGE
