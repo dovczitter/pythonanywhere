@@ -16,26 +16,26 @@
 
         <div class="columns">
           <div class="column">
-            <p class="is-size-2">Python demo project : <b>Most Active Stocks</b></p>
+            <p class="is-size-1">Python demo project : <b>Most Active Stocks</b></p>
           </div>
         </div>
 
         <div class="columns">
           <div class="column">
             <div class="control">
-              <label class="text is-size-2 pr-6">See me on :</label>
-              <button class="button is-large is-outlined is-link is-size-3" onclick="requestLinkedIn()">LinkedIn</button>
-              <button class="button is-large is-outlined is-link is-size-3" onclick="requestResume()">Resume</button>
+              <label class="text is-size-1 pr-6">See me on :</label>
+              <button class="button is-large is-outlined is-link is-size-2" onclick="requestLinkedIn()">LinkedIn</button>
+              <button class="button is-large is-outlined is-link is-size-2" onclick="requestResume()">Resume</button>
             </div>
           </div>
         </div>
         <div>
-          <p class="is-size-2">[{{info.dtNY}}] [Version: {{MostActiveStocks.version}}]</p>
+          <p class="is-size-1">[Note: 'MostActiveStocks' have extended symbol links ]</p>
+          <p class="is-size-1">[Version: {{MostActiveStocks.version}}]     [{{info.dtNY}}]</p>
         </div>
       </div>
     </div>
   </section>
-
    
   <section class="section">
     <div class="container">
@@ -44,30 +44,51 @@
       <div class="columns">
         <div class="column">
           <div class="control">
-            <label class="text has-text-left is-size-2">Query 'Yahoo Finance' for stock info </label>
-            <input class="input is-medium is-dark is-size-4" value="SYMBOL" onfocus="if(this.value==this.defaultValue)this.value='';" type="text" id="symbol" style="width: 140px; height: 50px;" autocomplete="off" maxlength="10">
-            <button class="button is-large is-outlined is-link is-size-3" style="width: 140px; height: 50px;" onclick="requestYahoo()">Submit</button>
+            <label class="text has-text-left is-size-1">Query 'Yahoo Finance' for stock info </label>
+            <input class="input is-medium is-dark is-size-3" value="SYMBOL" onfocus="if(this.value==this.defaultValue)this.value='';" type="text" id="symbol" style="width: 180px; height: 75px;" autocomplete="off" maxlength="10">
+            <button class="button is-large is-outlined is-link is-size-3" style="width: 140px; height: 75px;" onclick="requestYahoo()">Submit</button>
           </div>
         </div>
       </div>
 
-      <!-- MostActiveStocks dropdown -->
       <div class="columns">
+        
+        <!-- MostActiveStocks dropdown -->
         <div class="column">
           <div class="dropdown">
             <div class="dropdown-trigger">
-              <button class="button has-text-centered is-outlined is-info is-size-2" aria-haspopup="true" aria-controls="dropdown-menu">
+              <button class="button has-text-centered is-outlined is-info is-size-1" aria-haspopup="true" aria-controls="dropdown-menu">
                 <span>MostActiveStocks</span>
               </button>
             </div>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content is-size-2">
-                <a href="{{info.YahooHref}}">{{MostActiveStocks.YahooMostActivesName}}</a>
-                <a href="{{info.InvestingHref}}">{{MostActiveStocks.InvestingMostActivesName}}</a>
+              <div class="dropdown-content is-size-1">
+                {% for k,v in info.MostActiveStocksHrefs.items() %}
+                <a href={{v}}>{{k}}</a>
+                {% endfor %}
               </div>
             </div>
           </div>
         </div>
+
+        <!-- ForeinExchange dropdown -->
+        <div class="column">
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button class="button has-text-centered is-outlined is-info is-size-1" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>ForeignExchangeRates</span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content is-size-1">
+                {% for k,v in info.CurrencyHrefs.items() %}
+                <a href={{v}}>{{k}}</a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -88,10 +109,40 @@
     window.location.href = "{{ url_for('download', filename='DovCzitterResume.doc') }}";
   }
 
-  var dropdown = document.querySelector('.dropdown');
-  dropdown.addEventListener('click', function(event) {
-    event.stopPropagation();
-    dropdown.classList.toggle('is-active');
+  // Get all dropdowns on the page that aren't hoverable.
+  const dropdowns = document.querySelectorAll('.dropdown:not(.is-hoverable)');
+
+  if (dropdowns.length > 0) {
+    // For each dropdown, add event handler to open on click.
+    dropdowns.forEach(function(el) {
+      el.addEventListener('click', function(e) {
+      closeDropdowns();
+        e.stopPropagation();
+        el.classList.toggle('is-active');
+      });
+    });
+
+    // If user clicks outside dropdown, close it.
+    document.addEventListener('click', function(e) {
+      closeDropdowns();
+    });
+  }
+
+  /*
+  * Close dropdowns by removing `is-active` class.
+  */
+  function closeDropdowns() {
+    dropdowns.forEach(function(el) {
+      el.classList.remove('is-active');
+    });
+  }
+
+  // Close dropdowns if ESC pressed
+  document.addEventListener('keydown', function (event) {
+    let e = event || window.event;
+    if (e.key === 'Esc' || e.key === 'Escape') {
+      closeDropdowns();
+    }
   });
 
 </script>
